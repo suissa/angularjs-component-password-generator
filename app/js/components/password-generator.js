@@ -1,29 +1,25 @@
 'use strict';
 
-angular.module('component.passwordGenerator', []).
-  directive('passwordGenerator', function (MD5Service) {
+angular.module('component.passwordGenerator', [])
+.directive('passwordGenerator', function (MD5Service) {
     return {
-        restrict: 'EA',
-        scope: {
-          ngModel: '=',
-        },
-        template: '<div>Sua senha é: {{ngModel}}</div><div>Sua senha criptografada é: {{passwordMD5}}</div>',
-        // template: 'Termo: {{ term }} - {{ passwordMD5 }}',
-        link: function(scope, elem, attrs) {
-          scope.passwordMD5 = MD5Service.generate(scope.ngModel);
-
-          scope.$watch('passwordMD5', function(newVal, oldVal){
-            scope.passwordMD5 = MD5Service.generate(newVal);
-          })
-          // console.log('Termo diretiva: ', scope.ngModel);
+      restrict: 'EA',
+      scope: {
+        ngModel: '=',
+      },
+      template: '<div>Sua senha é: {{ngModel}}</div><div>Sua senha criptografada é: {{passwordMD5}}</div>',
+      // template: 'Termo: {{ term }} - {{ passwordMD5 }}',
+      link: function(scope, elem, attrs) {
+        scope.$watch('ngModel', function(newVal, oldVal){
+          scope.passwordMD5 = MD5Service.generate(newVal);
+        });
       }
     };
-  }).service('MD5Service', function($http, $q){
+  })
+  .service('MD5Service', function($http, $q){
       return {
         generate: generate
       };
-
-
 
       function generate(string){
         return truncate(generateMD5(string), 8);
